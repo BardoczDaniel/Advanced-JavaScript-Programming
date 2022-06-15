@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citirea datelor despre studenti</title>
+
+    <style>
+
+        body {
+            margin: 0; 
+            padding:0;
+            font-size:1.5rem;
+            font-family:'helvetica neue';
+            box-sizing: border-box;
+            background:#ffc600;
+        }
+
+        #main-container {
+            display: flex;
+            justify-content:center;
+            align-items: center;
+            flex-direction: column;
+            margin: 30px;
+        }
+        
+        #my-button {
+            width:120px;
+            height:40px;
+            font-size:1.3rem;
+            font-family:'helvetica neue';
+            background:#fff;
+            border-radius:8px;
+            border:none;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 5px 5px 3px rgba(0,0,0,0.4);
+            transition: .4s transform ease-in-out;
+        }
+
+        #my-button:hover {
+            transition: .7s transform ease-in-out;
+            transform: scale(1.1);
+            transform:rotate(360deg)
+        }
+
+        #text-container{
+            margin:20px 0;
+            padding:7px 0;
+            height:900px;
+            max-width: 700px;
+            width:100%;
+            background-color:#fff;
+            border-radius:8px;
+            overflow:hidden;
+            text-align:center;
+            box-shadow: 8px 8px 10px rgba(0,0,0,0.4);
+        }
+
+        #text-container h3 {
+            text-decoration: underline;
+            display: none;
+            margin-bottom: 40px;
+        }
+
+        #text-area {
+            
+            font-size:1.8rem;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div id="main-container">
+    <button id="my-button">Get Data</button>
+    <div id="text-container">
+        <h3 id="title-head">STUDENTI</h3>
+        <div id="text-area"></div>
+    </div>
+</div>
+
+
+<script>
+
+    let myButton = document.getElementById('my-button');
+    let textArea = document.getElementById('text-area');
+    var title = document.getElementById('title-head')
+    var arrayStudents = []
+    myButton.addEventListener('click', function () {
+        {
+            getData()
+        }
+    })
+
+
+    async function getData() {
+
+        try {
+            title.style.display = 'inline-block'
+            
+            let response = await fetch('https://v-dresevic.github.io/Advanced-JavaScript-Programming/data/students.txt')
+                .then(res => res.text())
+                .then(data => {
+
+                    let text = data.split("\n")
+                    
+                     var arrayStudents = []
+                    
+
+                    for (let i = 0 ; i <= text.length-3; i++){
+                        
+                        arrayStudents.push(new Student(text[i],text[i+1],text[i+2],text[i+3]))
+                        i=i+3
+                    }
+
+    
+
+                    for (let i = 0; i < arrayStudents.length; i++) {
+
+                        let studentInfo = arrayStudents[i].getInfo()
+                        
+                        textArea.innerHTML += studentInfo
+
+                    }
+                
+                })
+        }
+
+        catch (err) {
+
+            console.log('Fetch problem: ' + err.message);
+
+        }
+
+    }
+    
+
+    class Student {
+
+        name;
+        address;
+        phone;
+        course;
+
+        constructor(name, address, phone, course) {
+
+            this.name = name;
+            this.address = address;
+            this.phone = phone;
+            this.course = course;
+
+        }
+
+        getInfo() {
+
+            return "Name: " + this.name + "<br>" +
+                   "Address: " + this.address + "<br>" +
+                   "Phone: " + this.phone + "<br>" +
+                   "Cours: " + this.course + "<br> <br>"
+
+        }
+    }
+
+
+</script>
+</body>
+</html>
